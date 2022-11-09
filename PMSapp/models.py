@@ -75,8 +75,24 @@ class entries(models.Model):
     def __str__(self):
         return str(self.First_name)
 
+
+
+class manager(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    manager_id = models.CharField(max_length=100,unique=True)
+    First_name = models.CharField(max_length=100)
+    Middle_name = models.CharField(max_length=100, null=True, blank=True)
+    Last_name = models.CharField(max_length=100, null=True, blank=True)
+    Email_id = models.CharField(max_length=200)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return str(self.First_name)
+
 class employee(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
+    assigned_manager = models.ForeignKey(manager, on_delete=models.CASCADE)
     progress=models.IntegerField(default=0)
     employee_id = models.CharField(max_length=100,unique=True)
     First_name = models.CharField(max_length=100)
@@ -89,19 +105,6 @@ class employee(models.Model):
     joining_date = models.CharField(max_length=20)
     Reporting_manager = models.CharField(max_length=100, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True,blank=True)
-
-    def __str__(self):
-        return str(self.First_name)
-
-class manager(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    manager_id = models.CharField(max_length=100,unique=True)
-    First_name = models.CharField(max_length=100)
-    Middle_name = models.CharField(max_length=100, null=True, blank=True)
-    Last_name = models.CharField(max_length=100, null=True, blank=True)
-    Email_id = models.CharField(max_length=200)
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    date_added = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
         return str(self.First_name)
@@ -119,13 +122,40 @@ class adminuser(models.Model):
     def __str__(self):
         return str(self.First_name)
 
+class reviews(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    subject = models.CharField(max_length=500, default="Not Mentioned")
+    date = models.DateField()
+    time = models.TimeField()
+    is_frozen = models.BooleanField(default=False)
+    freezing_time=models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.subject)
+
 class comments(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    name = models.CharField(max_length=100,default="Anonymous")
-    message = models.CharField(max_length=5000)
+    review = models.ForeignKey(reviews,on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE,related_name='receiver')
+    sender_name = models.CharField(max_length=100)
+    receiver_name = models.CharField(max_length=100)
+    message = models.CharField(max_length=5000,null=True, blank=True)
     date = models.DateField()
     time = models.TimeField()
 
     def __str__(self):
-        return str(self.user)
+        return str(self.sender)
 
+
+class self_appraisals(models.Model):
+
+    created_by= models.ForeignKey(employee, on_delete=models.CASCADE)
+    handled_by= models.ForeignKey(manager, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+    status=models.CharField(max_length=100,default="Pending")
+    application = models.CharField(max_length=50000,default="Empty...")
+
+    def __str__(self):
+        return str(self.created_by)

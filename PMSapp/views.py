@@ -162,32 +162,36 @@ def make_comments(request):
 
         if request.method == 'POST':
               try:
-                message = request.POST['message']
-                from datetime import timedelta
+                   message = request.POST['message']
+                   review_id = request.POST['review_id']
+                   receiver_user = request.POST['receiver_user']
+                   sender_user = request.POST['sender_user']
+                   print(review_id,sender_user,receiver_user)
 
-                timezone=pytz.timezone('Asia/Kolkata')
-                now = datetime.datetime.now(tz=timezone)
-                dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
-                print("date  =", dt_string[:10])
-                print("time =", dt_string[11:])
-                dates = dt_string[:10]
-                time = dt_string[11:]
-                user = request.user
-                if user.is_employee:
-                    name=employee.objects.get(user=user).First_name
-                elif user.is_manager:
-                    name = manager.objects.get(user=user).First_name
-                elif user.is_admin:
-                    name = adminuser.objects.get(user=user).First_name
-                else:
-                    name= "Anonymous"
-                comments.objects.create(user=request.user,name=name,message=message,date=dates,time=time)
+                   from datetime import timedelta
 
-                return redirect("employeehome")
+                   timezone=pytz.timezone('Asia/Kolkata')
+                   now = datetime.datetime.now(tz=timezone)
+                   dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+                   print("date  =", dt_string[:10])
+                   print("time =", dt_string[11:])
+                   dates = dt_string[:10]
+                   time = dt_string[11:]
+                   manager_receiver= manager.objects.filter(user=User.objects.filter(email=receiver_user).first()).first()
+                   employee_sender= employee.objects.filter(user=User.objects.filter(email=sender_user).first(
+                   )).first()
+                   review_instance= reviews.objects.filter(id=review_id).first()
+                   comments.objects.create(review=review_instance,sender=User.objects.filter(email=sender_user).first(),
+                   receiver=User.objects.filter(email=receiver_user).first(),
+                   sender_name=employee_sender.First_name,receiver_name=manager_receiver.First_name,message=message,
+                   date=dates,
+                   time=time)
+
+                   return redirect("commentspage",id=review_id)
               except Exception as e:
                    print(e)
                    messages.error(request,"comment was not made please contact the administrator")
-                   return redirect("employeehome")
+                   return redirect("commentspage",id=review_id)
         else:
             return HttpResponse("404 not allowed")
 
@@ -196,3 +200,98 @@ def make_comments(request):
 
 def managerhome(request):
     pass
+
+@login_required(login_url='/internlogin/')
+def periodicreview(request):
+
+    if request.user.is_employee:
+
+        e = employee.objects.filter(user=request.user).first()
+        if e is not None:
+
+
+
+            review= reviews.objects.all().order_by('-id')
+
+            context = {'reviews':review}
+            return render(request,'periodicreview.html',context)
+        return HttpResponse("You are not allowed to view this page. Make sure you are added in employee field")
+    else:
+        return HttpResponse("You are not allowed to view this Page")
+
+@login_required(login_url='/internlogin/')
+def commentspage(request,id):
+
+    if request.user.is_employee:
+
+        e = employee.objects.filter(user=request.user).first()
+        if e is not None:
+
+
+
+            comment= comments.objects.filter(review=id)
+
+            review=reviews.objects.filter(id=id).first()
+
+            review_user=review.user
+            print(review_user)
+            u=manager.objects.filter(user=review_user).first()
+            print(e.First_name,u)
+
+
+            context = {'comments':comment,'sender_user':request.user,'receiver_user':review_user,'review_id':id,
+            'sender_name':e.First_name,'receiver_name':u.First_name,'review':review}
+            print(context)
+            return render(request,'comments.html',context)
+        return HttpResponse("You are not allowed to view this page. Make sure you are added in employee field")
+    else:
+        return HttpResponse("You are not allowed to view this Page")
+
+@login_required(login_url='/internlogin/')
+def self_appraisal(request):
+
+    if request.user.is_employee:
+
+        e = employee.objects.filter(user=request.user).first()
+        if e is not None:
+
+            self_appraisal= self_appraisals.objects.filter(created_by=e).order_by('-id')
+            context = {'self_appraisals': self_appraisal}
+
+
+            return render(request,'self_appraisal.html',context)
+        return HttpResponse("You are not allowed to view this page. Make sure you are added in employee field")
+    else:
+        return HttpResponse("You are not allowed to view this Page")
+
+
+@login_required(login_url='/internlogin/')
+def self_appraisalpage(request,id):
+
+    if request.user.is_employee:
+
+        e = employee.objects.filter(user=request.user).first()
+        if e is not None:
+            self_appraisal = self_appraisals.objects.filter(id=id).first()
+            context = {'self_appraisal': self_appraisal}
+
+
+            return render(request,'self_appraisalpage.html',context)
+        return HttpResponse("You are not allowed to view this page. Make sure you are added in employee field")
+    else:
+        return HttpResponse("You are not allowed to view this Page")
+
+
+@login_required(login_url='/internlogin/')
+def self_appraisalform(request):
+    if request.user.is_employee:
+
+        e = employee.objects.filter(user=request.user).first()
+        if e is not None:
+            sending_by=e.First_name
+            #sending_to =
+
+            return render(request, 'self_appraisalform.html')
+        return HttpResponse("You are not allowed to view this page. Make sure you are added in employee field")
+    else:
+        return HttpResponse("You are not allowed to view this Page")

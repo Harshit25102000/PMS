@@ -9,6 +9,8 @@ admin.site.register(employee)
 admin.site.register(manager)
 admin.site.register(adminuser)
 admin.site.register(comments)
+admin.site.register(reviews)
+admin.site.register(self_appraisals)
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):

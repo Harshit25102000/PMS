@@ -13,4 +13,10 @@ urlpatterns = [
     path("logout_view/", views.logout_view,name="logout_view"),
     path("employee_profile/", views.employee_profile,name="employee_profile"),
     path("make_comments/", views.make_comments,name="make_comments"),
+    path("periodicreview/", views.periodicreview,name="periodicreview"),
+    path("commentspage/<int:id>", views.commentspage,name="commentspage"),
+    path("self_appraisal/", views.self_appraisal,name="self_appraisal"),
+    path("self_appraisalpage/<int:id>", views.self_appraisalpage,name="self_appraisalpage"),
+    path("self_appraisalform/", views.self_appraisalform,name="self_appraisalform"),
+
     ]
