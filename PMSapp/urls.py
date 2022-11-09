@@ -18,5 +18,14 @@ urlpatterns = [
     path("self_appraisal/", views.self_appraisal,name="self_appraisal"),
     path("self_appraisalpage/<int:id>", views.self_appraisalpage,name="self_appraisalpage"),
     path("self_appraisalform/", views.self_appraisalform,name="self_appraisalform"),
+    path("make_appraisal/", views.make_appraisal,name="make_appraisal"),
+    path("kpi/", views.kpi,name="kpi"),
+    path("managersignup/", views.managersignup,name="managersignup"),
+    path("managerlogin/", views.managerlogin,name="managerlogin"),
+    path("handle_manager_login/", views.handle_manager_login,name="handle_manager_login"),
+    path("handle_manager_signup/", views.handle_manager_signup,name="handle_manager_signup"),
+    path("manager_profile/", views.manager_profile,name="manager_profile"),
+    path("manager_kpi/", views.manager_kpi,name="manager_kpi"),
+    path("manager_periodicreview/",views.manager_periodicreview,name="manager_periodicreview"),
 
     ]

@@ -20,7 +20,7 @@
 <div class="vertical-nav bg-white" id="sidebar">
   <div class="py-4 px-3 mb-4 bg-light">
     <div class="media d-flex align-items-center">
-      <img loading="lazy" src="images/p-1.png" alt="..." width="80" height="80" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+
       <div class="media-body">
         <h4 class="m-0">{{ user.First_name }}</h4>
         <p class="font-weight-normal text-muted mb-0">{{ user.Designation }}</p>
@@ -45,7 +45,7 @@
             </a>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link text-dark">
+      <a href="{% url 'kpi' %}" class="nav-link text-dark">
 
                 kpi
             </a>
@@ -99,7 +99,8 @@
       <div class="col-xl-9">
 
         <h1 class="text-white mb-4">Apply for a Self Appraisal</h1>
-
+        <form action="/make_appraisal/" method="post" >
+        {% csrf_token %}
         <div class="card" style="border-radius: 15px;">
           <div class="card-body">
 
@@ -111,7 +112,8 @@
               </div>
               <div class="col-md-9 pe-5">
 
-                <input type="text" class="form-control form-control-lg" />
+                <input type="text" name="sender" value="{{ sending_by }}" class="form-control form-control-lg"
+                readonly/>
 
               </div>
             </div>
@@ -126,7 +128,9 @@
               </div>
               <div class="col-md-9 pe-5">
 
-                <input type="email" class="form-control form-control-lg" placeholder="example@example.com" />
+                <input type="email" value="{{ sending_to }}" class="form-control form-control-lg"
+                name="receiver"
+                readonly/>
 
               </div>
             </div>
@@ -141,7 +145,8 @@
               </div>
               <div class="col-md-9 pe-5">
 
-                <textarea class="form-control" rows="3" placeholder="Message sent to the employer"></textarea>
+                <textarea class="form-control" rows="3" name="message" placeholder="Message sent to the manager">
+                </textarea>
 
               </div>
             </div>
@@ -157,6 +162,7 @@
 
           </div>
         </div>
+        </form>
 
       </div>
     </div>

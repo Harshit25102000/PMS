@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Landing Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+      <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+      <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+      <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+      <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        {% load static %}
+
+<link href="{% static 'CSS/css.css' %}" rel="stylesheet">
+      <style type="text/css">
+
+        html,
+        body,
+        #container {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+
+           #chart-container{
+    height:30vh;
+    margin: 10px 2px;
+    padding:10px 2px;
+}
+
+#chart-container2{
+    height:30vh;
+    margin: 4px;
+    padding:2px;
+}
+    </style>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Vertical navbar -->
+<div class="vertical-nav bg-white" id="sidebar">
+  <div class="py-4 px-3 mb-4 bg-light">
+    <div class="media d-flex align-items-center">
+
+      <div class="media-body">
+        <h4 class="m-0">{{ user.First_name }}</h4>
+        <p class="font-weight-normal text-muted mb-0">{{ user.Designation }}</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0">Employee Dashboard</p>
+
+
+  <ul class="nav flex-column bg-white mb-0">
+    <li class="nav-item">
+      <a href="{% url 'employeehome' %}" class="nav-link text-dark">
+
+                Home
+            </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'employee_profile' %}" class="nav-link text-dark">
+
+                My Profile
+            </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'kpi' %}" class="nav-link text-dark">
+
+                kpi
+            </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'periodicreview' %}" class="nav-link text-dark">
+
+                periodic review
+            </a>
+    </li>
+  </ul>
+
+  <ul class="nav flex-column bg-white mb-0">
+    <li class="nav-item">
+      <a href="{% url 'self_appraisal' %}" class="nav-link text-dark">
+
+                self appraisal
+            </a>
+    </li>
+
+
+     <li class="nav-item">
+      <a href="{% url 'logout_view' %}" class="nav-link text-dark">
+
+                Log out
+            </a>
+    </li>
+  </ul>
+</div>
+<!-- End vertical navbar -->
+
+
+    <!-- Page content holder -->
+    <div class="page-content p-5" id="content">
+        <!-- Toggle button -->
+        <button id="sidebarCollapse" type="button" class="btn btn-light bg-white rounded-pill shadow-sm px-4 mb-4"><i
+                class="fa fa-bars mr-2"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
+
+        <!-- Demo content -->
+
+
+        <div id="chart-container"></div>
+        <div id="chart-container2"></div>
+
+
+        <script>
+
+            anychart.onDocumentReady(function () {
+              // create column chart
+              var chart = anychart.column();
+
+              // turn on chart animation
+              chart.animation(true);
+
+              // set chart title text settings
+              chart.title('Yearly Performance');
+
+              // create area series with passed data
+              var series = chart.column([
+              ['2018', '70'],
+            ['2019', '60'],
+            ['2020', '30'],
+            ['2021', '66'],
+            ['2022', '45']
+
+
+              ]);
+
+              // set series tooltip settings
+              series.tooltip().titleFormat('{%X}');
+
+              series
+                .tooltip()
+                .position('center-top')
+                .anchor('center-bottom')
+                .offsetX(0)
+                .offsetY(5)
+                .format('{%Value}{groupsSeparator: }');
+
+              // set scale minimum
+              chart.yScale().minimum(0);
+
+              // set yAxis labels formatter
+              chart.yAxis().labels().format('{%Value}{groupsSeparator: }');
+
+              // tooltips position and interactivity settings
+              chart.tooltip().positionMode('point');
+              chart.interactivity().hoverMode('by-x');
+
+              // axes titles
+              chart.xAxis().title('Year');
+              chart.yAxis().title('Performance');
+
+              // set container id for the chart
+              chart.container('chart-container2');
+
+              // initiate chart drawing
+              chart.draw();
+            });
+
+        </script>
+         <script>
+
+            anychart.onDocumentReady(function () {
+              // create column chart
+              var chart = anychart.column();
+
+              // turn on chart animation
+              chart.animation(true);
+
+              // set chart title text settings
+              chart.title('Monthly Performance');
+
+              // create area series with passed data
+              var series = chart.column([
+                ['January', '70'],
+                ['February', '10'],
+                ['March', '30'],
+                ['April', '66'],
+                ['May', '45'],
+                ['June', '25'],
+                ['July', '35'],
+                ['August', '80'],
+                ['September', '70'],
+                ['October', '60'],
+                ['November', '50'],
+                ['December', '40']
+
+
+              ]);
+
+              // set series tooltip settings
+              series.tooltip().titleFormat('{%X}');
+
+              series
+                .tooltip()
+                .position('center-top')
+                .anchor('center-bottom')
+                .offsetX(0)
+                .offsetY(5)
+                .format('{%Value}{groupsSeparator: }');
+
+              // set scale minimum
+              chart.yScale().minimum(0);
+
+              // set yAxis labels formatter
+              chart.yAxis().labels().format('{%Value}{groupsSeparator: }');
+
+              // tooltips position and interactivity settings
+              chart.tooltip().positionMode('point');
+              chart.interactivity().hoverMode('by-x');
+
+              // axes titles
+              chart.xAxis().title('Months');
+              chart.yAxis().title('Performance');
+
+              // set container id for the chart
+              chart.container('chart-container');
+
+              // initiate chart drawing
+              chart.draw();
+            });
+
+        </script>
+
+
+
+
+    <!-- End demo content -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+    <script>
+        $(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar, #content').toggleClass('active');
+            });
+        });
+
+
+    </script>
+    </body>
+
+</html>

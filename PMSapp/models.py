@@ -71,6 +71,7 @@ class entries(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)
     joining_date = models.CharField(max_length=20)
     Reporting_manager= models.CharField(max_length=100,blank=True,null=True)
+    Reporting_manager_id = models.CharField(max_length=100,default="1")
 
     def __str__(self):
         return str(self.First_name)
@@ -159,3 +160,17 @@ class self_appraisals(models.Model):
 
     def __str__(self):
         return str(self.created_by)
+
+
+class manager_entry(models.Model):
+
+    manager_id = models.CharField(max_length=100, unique=True)
+    First_name = models.CharField(max_length=100)
+    Middle_name = models.CharField(max_length=100, null=True, blank=True)
+    Last_name = models.CharField(max_length=100, null=True, blank=True)
+    Email_id = models.CharField(max_length=200)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return str(self.First_name)
